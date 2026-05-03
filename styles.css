@@ -553,7 +553,6 @@ input, select, textarea { font-family: inherit; }
 
 /* === モーダル === */
 .modal-overlay {
-.modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(15, 25, 20, 0.55);

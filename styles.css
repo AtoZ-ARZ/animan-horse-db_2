@@ -537,6 +537,42 @@ input, select, textarea { font-family: inherit; }
   100% { transform: scale(1); }
 }
 
+/* おたおめしたいボタン（一口仲間） */
+.cheer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-subtle);
+  transition: all 0.15s;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.cheer-btn:hover {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  background: #fdf8e8;
+}
+.cheer-btn.cheered {
+  color: var(--accent-strong);
+  background: #fdf3d4;
+  border-color: var(--accent);
+}
+[data-theme="dark"] .cheer-btn:hover,
+[data-theme="dark"] .cheer-btn.cheered {
+  background: rgba(184, 148, 31, 0.18);
+}
+.cheer-count {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  margin-left: 2px;
+}
+
 /* 空状態 */
 .empty-state {
   text-align: center;

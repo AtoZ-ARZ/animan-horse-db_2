@@ -76,11 +76,15 @@ function App() {
   const [likes, setLikes] = useStateA(() => {
     try { return JSON.parse(localStorage.getItem("animan_likes") || "[]"); } catch { return []; }
   });
+  const [cheers, setCheers] = useStateA(() => {
+    try { return JSON.parse(localStorage.getItem("animan_cheers") || "[]"); } catch { return []; }
+  });
   const [favHorses, setFavHorses] = useStateA(() => {
     try { return JSON.parse(localStorage.getItem("animan_fav_horses") || "[]"); } catch { return []; }
   });
 
   useEffectA(() => { localStorage.setItem("animan_likes", JSON.stringify(likes)); }, [likes]);
+  useEffectA(() => { localStorage.setItem("animan_cheers", JSON.stringify(cheers)); }, [cheers]);
   useEffectA(() => { localStorage.setItem("animan_fav_horses", JSON.stringify(favHorses)); }, [favHorses]);
 
   const favKey = (name, club) => `${name}|${club}`;
@@ -180,6 +184,20 @@ function App() {
       setLikes(prev => liked ? [...prev, id] : prev.filter(x => x !== id));
       setPosts(prev => prev.map(p => p.id === id ? { ...p, likes: Math.max(0, (p.likes || 0) - delta) } : p));
       alert("いいねの更新に失敗しました: " + e.message);
+    }
+  };
+
+  const toggleCheer = async (id) => {
+    const cheered = cheers.includes(id);
+    const delta = cheered ? -1 : 1;
+    setCheers(prev => cheered ? prev.filter(x => x !== id) : [...prev, id]);
+    setPosts(prev => prev.map(p => p.id === id ? { ...p, cheer_count: Math.max(0, (p.cheer_count || 0) + delta) } : p));
+    try {
+      await window.supabaseAPI.incrementCheer(id, delta);
+    } catch (e) {
+      setCheers(prev => cheered ? [...prev, id] : prev.filter(x => x !== id));
+      setPosts(prev => prev.map(p => p.id === id ? { ...p, cheer_count: Math.max(0, (p.cheer_count || 0) - delta) } : p));
+      alert("一口仲間の更新に失敗しました: " + e.message);
     }
   };
 
@@ -344,8 +362,10 @@ function App() {
                     key={p.id}
                     post={p}
                     isLiked={likes.includes(p.id)}
+                    isCheered={cheers.includes(p.id)}
                     isFav={isFav(p.horse_name, p.club)}
                     onLike={toggleLike}
+                    onCheer={toggleCheer}
                     onEdit={startEdit}
                     onToggleFav={() => toggleFav(p.horse_name, p.club)}
                   />

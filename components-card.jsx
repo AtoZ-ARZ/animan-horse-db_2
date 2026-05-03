@@ -48,13 +48,18 @@ function PlusIcon() {
   );
 }
 
-function RaceCard({ post, isLiked, isFav, onLike, onEdit, onToggleFav }) {
+function RaceCard({ post, isLiked, isCheered, isFav, onLike, onCheer, onEdit, onToggleFav }) {
   const { surface, distance } = window.parseConditions(post.conditions);
   const [popping, setPopping] = useState(false);
+  const [cheerPop, setCheerPop] = useState(false);
   const isTentative = !!post.is_tentative;
   const handleLike = () => {
     if (!isLiked) { setPopping(true); setTimeout(() => setPopping(false), 320); }
     onLike(post.id);
+  };
+  const handleCheer = () => {
+    if (!isCheered) { setCheerPop(true); setTimeout(() => setCheerPop(false), 320); }
+    onCheer(post.id);
   };
 
   const initial = (post.poster_name || "名").charAt(0);
@@ -107,12 +112,25 @@ function RaceCard({ post, isLiked, isFav, onLike, onEdit, onToggleFav }) {
         <div className="poster-info">
           <div className="poster-avatar">{initial}</div>
           <span className="poster-name">{post.poster_name || "名無しさん"}</span>
+          {(post.cheer_count || 0) > 0 && (
+            <span className="cheer-count" title="一口仲間">・他 {post.cheer_count}名</span>
+          )}
           <span className="poster-time">· {window.relativeTime(post.created_at)}</span>
         </div>
-        <button className={`like-btn ${isLiked ? "liked" : ""}`} onClick={handleLike}>
-          <span className={popping ? "like-pop" : ""}><HeartIcon filled={isLiked} /></span>
-          <span>{post.likes || 0}</span>
-        </button>
+        <div style={{display: "flex", gap: 6, alignItems: "center"}}>
+          <button
+            className={`cheer-btn ${isCheered ? "cheered" : ""}`}
+            onClick={handleCheer}
+            title="一口仲間として参加"
+          >
+            <span className={cheerPop ? "like-pop" : ""}>🤝</span>
+            <span>{isCheered ? "仲間です" : "おたおめしたい"}</span>
+          </button>
+          <button className={`like-btn ${isLiked ? "liked" : ""}`} onClick={handleLike}>
+            <span className={popping ? "like-pop" : ""}><HeartIcon filled={isLiked} /></span>
+            <span>{post.likes || 0}</span>
+          </button>
+        </div>
       </div>
     </article>
   );

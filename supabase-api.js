@@ -121,6 +121,22 @@ async function incrementLike(id, delta = 1) {
   });
 }
 
+// 一口仲間トグル（カウント±1）
+async function incrementCheer(id, delta = 1) {
+  return api(`/rpc/increment_cheer`, {
+    method: "POST",
+    body: JSON.stringify({ post_id: id, delta })
+  });
+}
+
+// 一口仲間トグル（カウント±1）
+async function incrementCheer(id, delta = 1) {
+  return api(`/rpc/increment_cheer`, {
+    method: "POST",
+    body: JSON.stringify({ post_id: id, delta })
+  });
+}
+
 // 自動削除（パスワード不要・期限切れ用）
 async function purgeExpiredPosts() {
   const today = new Date();
@@ -156,6 +172,6 @@ async function purgeExpiredPosts() {
 }
 
 window.supabaseAPI = {
-  fetchPosts, createPost, updatePost, deletePost, incrementLike, purgeExpiredPosts,
+  fetchPosts, createPost, updatePost, deletePost, incrementLike, incrementCheer, purgeExpiredPosts,
   isConfigured: () => !!SUPABASE_URL
 };

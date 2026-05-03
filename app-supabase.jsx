@@ -54,6 +54,12 @@ function App() {
       if (!window.supabaseAPI.isConfigured()) {
         throw new Error("Supabaseが未設定です。HTMLヘッダーの window.SUPABASE_CONFIG を設定してください。");
       }
+      // 期限切れ投稿の自動削除（出走日から7日経過したものを削除）
+      try {
+        const deleted = await window.supabaseAPI.purgeExpiredPosts();
+        if (deleted > 0) console.log(`期限切れ投稿を ${deleted} 件削除しました`);
+      } catch (e) { console.warn("自動削除エラー", e); }
+
       const data = await window.supabaseAPI.fetchPosts();
       setPosts(data || []);
     } catch (e) {
@@ -121,6 +127,8 @@ function App() {
         if (!p.is_tentative) return false;
       } else {
         const d = new Date((p.race_date || "1970-01-01") + "T00:00:00");
+        // 過去日付の通常投稿は全フィルタで非表示
+        if (!p.is_tentative && d < today) return false;
         if (dateFilter === "today") { if (p.is_tentative || d.getTime() !== today.getTime()) return false; }
         else if (dateFilter === "weekend") { if (p.is_tentative || d < today || d > sundayEnd || (d.getDay() !== 0 && d.getDay() !== 6)) return false; }
         else if (dateFilter === "future") { if (p.is_tentative || d <= today) return false; }

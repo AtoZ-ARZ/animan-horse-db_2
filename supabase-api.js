@@ -121,7 +121,41 @@ async function incrementLike(id, delta = 1) {
   });
 }
 
+// 自動削除（パスワード不要・期限切れ用）
+async function purgeExpiredPosts() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const sevenDaysAgo = new Date(today.getTime() - 7 * 86400 * 1000);
+  const cutoffDate = sevenDaysAgo.toISOString().slice(0, 10);
+
+  // 通常投稿：race_date < cutoffDate
+  // 仮予定：tentative_month の翌月末 < today（出走月から最長 約2ヶ月で削除）
+  const tentativeCutoff = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+  const tentativeCutoffStr = `${tentativeCutoff.getFullYear()}-${String(tentativeCutoff.getMonth() + 1).padStart(2, "0")}`;
+
+  let deleted = 0;
+  try {
+    // 通常投稿の期限切れ
+    const r1 = await api(
+      `/posts?is_tentative=is.false&race_date=lt.${cutoffDate}`,
+      { method: "DELETE", headers: { "Prefer": "return=representation" } }
+    );
+    if (Array.isArray(r1)) deleted += r1.length;
+  } catch (e) { console.warn("通常投稿の期限切れ削除に失敗", e); }
+
+  try {
+    // 仮予定の期限切れ（出走月が前々月以前）
+    const r2 = await api(
+      `/posts?is_tentative=is.true&tentative_month=lt.${tentativeCutoffStr}`,
+      { method: "DELETE", headers: { "Prefer": "return=representation" } }
+    );
+    if (Array.isArray(r2)) deleted += r2.length;
+  } catch (e) { console.warn("仮予定の期限切れ削除に失敗", e); }
+
+  return deleted;
+}
+
 window.supabaseAPI = {
-  fetchPosts, createPost, updatePost, deletePost, incrementLike,
+  fetchPosts, createPost, updatePost, deletePost, incrementLike, purgeExpiredPosts,
   isConfigured: () => !!SUPABASE_URL
 };

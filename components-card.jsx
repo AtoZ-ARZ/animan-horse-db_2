@@ -52,8 +52,6 @@ function RaceCard({ post, isLiked, isFav, onLike, onEdit, onToggleFav }) {
   const { surface, distance } = window.parseConditions(post.conditions);
   const [popping, setPopping] = useState(false);
   const isTentative = !!post.is_tentative;
-
-  const handleLike = () => {
     if (!isLiked) { setPopping(true); setTimeout(() => setPopping(false), 320); }
     onLike(post.id);
   };
@@ -84,6 +82,9 @@ function RaceCard({ post, isLiked, isFav, onLike, onEdit, onToggleFav }) {
           )}
         </div>
         <div className="card-actions">
+          {isFav && (
+            <span style={{fontSize: 9, fontWeight: 800, letterSpacing: 0.5, color: "var(--accent)", background: "var(--bg-card)", padding: "2px 6px", borderRadius: 4, border: "1px solid var(--accent)", display: "inline-flex", alignItems: "center"}}>★ MY</span>
+          )}
           <button className={`icon-btn fav-btn ${isFav ? "is-fav" : ""}`} title={isFav ? "マイリストから外す" : "マイリストに追加"} onClick={onToggleFav}>
             <span style={{fontSize: 16, lineHeight: 1, color: isFav ? "var(--accent)" : "inherit"}}>{isFav ? "★" : "☆"}</span>
           </button>

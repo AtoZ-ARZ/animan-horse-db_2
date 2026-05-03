@@ -570,12 +570,12 @@ input, select, textarea { font-family: inherit; }
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 540px;
-  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  max-height: calc(100vh - 32px);
+  overflow: hidden;
 }
 @keyframes slideUp { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
@@ -589,10 +589,11 @@ input, select, textarea { font-family: inherit; }
 .modal-title { font-size: 16px; font-weight: 700; }
 .modal-body {
   padding: 20px 22px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   flex: 1 1 auto;
   min-height: 0;
+  max-height: calc(100vh - 200px);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }

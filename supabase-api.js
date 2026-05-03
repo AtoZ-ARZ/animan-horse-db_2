@@ -47,7 +47,7 @@ async function fetchPosts() {
   const yesterday = new Date(Date.now() + JST_OFFSET_MS - 86400000).toISOString().slice(0, 10);
   // race_date >= yesterday の投稿、日付昇順
   const params = new URLSearchParams({
-    "select": "id,horse_name,club,race_date,racecourse,race_number,race_name,conditions,confidence,poster_name,comment,likes,is_tentative,tentative_month,created_at",
+    "select": "id,horse_name,club,race_date,racecourse,race_number,race_name,conditions,confidence,poster_name,comment,likes,cheer_count,is_tentative,tentative_month,created_at",
     "or": `(race_date.gte.${yesterday},is_tentative.eq.true)`,
     "order": "is_tentative.asc,race_date.asc,racecourse.asc,race_number.asc"
   });

@@ -576,9 +576,18 @@ input, select, textarea { font-family: inherit; }
   animation: slideUp 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
   max-height: calc(100vh - 32px);
   overflow: hidden;
+  min-height: 0;
 }
 @supports (height: 100dvh) {
   .modal { max-height: calc(100dvh - 32px); }
+}
+/* PostForm/EditForm の <form> もflex columnコンテナに */
+.modal > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 @keyframes slideUp { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 

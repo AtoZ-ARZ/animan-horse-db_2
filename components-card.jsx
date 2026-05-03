@@ -52,6 +52,7 @@ function RaceCard({ post, isLiked, isFav, onLike, onEdit, onToggleFav }) {
   const { surface, distance } = window.parseConditions(post.conditions);
   const [popping, setPopping] = useState(false);
   const isTentative = !!post.is_tentative;
+  const handleLike = () => {
     if (!isLiked) { setPopping(true); setTimeout(() => setPopping(false), 320); }
     onLike(post.id);
   };

@@ -126,10 +126,6 @@ function RaceCard({ post, isLiked, isCheered, isFav, onLike, onCheer, onEdit, on
             <span className={cheerPop ? "like-pop" : ""}>🤝</span>
             <span>{isCheered ? "仲間です" : "おたおめしたい"}</span>
           </button>
-          <button className={`like-btn ${isLiked ? "liked" : ""}`} onClick={handleLike}>
-            <span className={popping ? "like-pop" : ""}><HeartIcon filled={isLiked} /></span>
-            <span>{post.likes || 0}</span>
-          </button>
         </div>
       </div>
     </article>
